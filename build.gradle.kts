@@ -6,21 +6,20 @@ plugins {
     `build-scan`
     `java-gradle-plugin`
     `maven-publish`
-    signing
+//    signing
     id("com.gradle.plugin-publish") version "0.10.0"
-    id("gradle.site") version "0.6"
     kotlin("jvm") version "1.3.10"
 }
 
 val junitPlatformVersion = "1.1.0"
 val spekVersion = "2.0.0-rc.1"
 
-group = "org.gradle.plugins"
-version = "0.6"
-description = "Generates documentation in HTML for given project"
+group = "com.applicaster.zapp"
+version = "0.1"
+description = "Helpers for building Zapp apps and plugins"
 
-val webUrl = "https://gradle-guides.github.io/${project.name}/"
-val githubUrl = "https://github.com/gradle-guides/${project.name}.git"
+val webUrl = "https://github.com/applicaster/zapp-gradle-plugin.git"
+val githubUrl = "https://github.com/applicaster/zapp-gradle-plugin.git"
 
 buildScan {
     termsOfServiceUrl = "https://gradle.com/terms-of-service"
@@ -56,12 +55,6 @@ buildScan {
     if (!System.getenv("CI").isNullOrEmpty()) {
         tag("CI")
     }
-}
-
-site {
-    outputDir.set(file("$rootDir/docs"))
-    websiteUrl.set(webUrl)
-    vcsUrl.set(githubUrl)
 }
 
 // Separate integration tests from "fast" tests
@@ -147,9 +140,9 @@ dependencies {
 // Configure java-gradle-plugin
 gradlePlugin {
     plugins {
-        register("sitePlugin") {
-            id = "gradle.site"
-            implementationClass = "org.gradle.plugins.site.SitePlugin"
+        register("zapp") {
+            id = "zapp-gradle-plugin"
+            implementationClass = "${project.group}.GradlePlugin"
         }
     }
 }
@@ -159,12 +152,12 @@ pluginBundle {
     website = webUrl
     vcsUrl = githubUrl
     description = project.description
-    tags = listOf("documentation", "site")
+    tags = listOf("util")
 
     plugins {
-        named("sitePlugin") {
+        named("zapp") {
             // ID and implementation class are used from `gradlePlugin` config
-            displayName = "Gradle Site Plugin"
+            displayName = "Zapp Gradle Plugin"
         }
     }
 
@@ -202,19 +195,19 @@ publishing {
 
             developers {
                 developer {
-                    id.set("eriwen")
-                    name.set("Eric Wendelin")
-                    email.set("eric@gradle.com")
+                    id.set("neerfri")
+                    name.set("Neer Friedman")
+                    email.set("technical@applicaster.com")
                 }
             }
         }
     }
 }
 
-signing {
-    useGpgCmd()
-    sign(configurations.archives.get())
-    setRequired(Callable {
-        gradle.taskGraph.hasTask("publishPlugins")
-    })
-}
+//signing {
+//    useGpgCmd()
+//    sign(configurations.archives.get())
+//    setRequired(Callable {
+//        gradle.taskGraph.hasTask("publishPlugins")
+//    })
+//}
